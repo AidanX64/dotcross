@@ -1,0 +1,16 @@
+# Windows executables
+*.exe
+
+# Object files
+*.obj
+
+# Optional: debug symbols
+*.pdb
+*.ilk
+
+# Optional: Visual Studio incremental build files
+*.idb
+
+# Optional: Generated import libraries
+*.lib
+*.exp
