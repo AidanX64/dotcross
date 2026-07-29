@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up MSVC dev environment
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build dot.c
+        run: cl /O2 dot.c user32.lib gdi32.lib
+
+      - name: Build cyandot.c
+        run: cl /O2 cyandot.c user32.lib gdi32.lib
+
+      - name: Build redcalebdot.c
+        run: cl /O2 redcalebdot.c user32.lib gdi32.lib
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotcross-binaries
+          path: |
+            *.exe
