@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
   pull_request:
-    branches: [main, master]
 
 jobs:
   build:
@@ -15,18 +13,29 @@ jobs:
       - name: Set up MSVC dev environment
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build dot.c
-        run: cl /O2 dot.c user32.lib gdi32.lib
+      - name: Build all C sources
+        shell: pwsh
+        run: |
+          $sources = @(Get-ChildItem -File -Filter '*.c')
+          if ($sources.Count -eq 0) {
+            throw 'No C source files found.'
+          }
 
-      - name: Build cyandot.c
-        run: cl /O2 cyandot.c user32.lib gdi32.lib
+          $outputDirectory = Join-Path $PWD 'build'
+          New-Item -ItemType Directory -Force -Path $outputDirectory | Out-Null
 
-      - name: Build redcalebdot.c
-        run: cl /O2 redcalebdot.c user32.lib gdi32.lib
+          foreach ($source in $sources) {
+            $outputPath = Join-Path $outputDirectory ($source.BaseName + '.exe')
+            $objectPath = Join-Path $outputDirectory ($source.BaseName + '.obj')
+            & cl.exe /nologo /O2 "/Fe$outputPath" "/Fo$objectPath" $source.FullName user32.lib gdi32.lib
+            if ($LASTEXITCODE -ne 0) {
+              throw "Failed to build $($source.Name)."
+            }
+          }
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
           name: dotcross-binaries
-          path: |
-            *.exe
+          path: build/*.exe
+          if-no-files-found: error
