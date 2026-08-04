@@ -1,7 +1,7 @@
-// redcalebdot.c
+// sudo.c
 // Tiny red crosshair overlay with a black outline.
 // Build:
-//     cl /O2 redcalebdot.c user32.lib gdi32.lib
+//     cl /O2 sudo.c user32.lib gdi32.lib
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>

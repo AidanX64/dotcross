@@ -1,7 +1,7 @@
-// crosshair.c
+// dot.c
 // Tiny white-dot crosshair overlay.
 // Build:
-//     cl /O2 crosshair.c user32.lib gdi32.lib
+//     cl /O2 dot.c user32.lib gdi32.lib
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
